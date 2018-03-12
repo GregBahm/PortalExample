@@ -1,6 +1,4 @@
-﻿// Upgrade NOTE: upgraded instancing buffer 'Props' to new syntax.
-
-Shader "Custom/PortaleeShader" 
+﻿Shader "Custom/PortaleeShader" 
 {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
@@ -12,7 +10,7 @@ Shader "Custom/PortaleeShader"
 	{
 			Stencil
 			{
-				Ref 2
+				Ref[_COLORMASK]
 				Comp equal
 				Pass keep
 				ZFail decrWrap
