@@ -29,8 +29,8 @@ public class PortalScript : MonoBehaviour
         foreach (Material mat in _targetMaterials)
         {
             mat.SetFloat("_COLORMASK", PortalId);
+            mat.SetVector("_PortalNormal", Portal.transform.up);
+            mat.SetVector("_PortalPoint", Portal.transform.position);
         }
-        Shader.SetGlobalVector("_PortalNormal", transform.up);
-        Shader.SetGlobalVector("_PortalPoint", transform.position);
 	}
 }

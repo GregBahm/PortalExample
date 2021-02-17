@@ -3,7 +3,10 @@
 	Properties {
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
+		_BumpMap("Normalmap", 2D) = "bump" {}
+		_GlossMap("Gloss Map", 2D) = "white" {}
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
+		_MetallicMap("Metallic Map", 2D) = "white" {}
 		_Metallic ("Metallic", Range(0,1)) = 0.0
 	}
 	SubShader 
@@ -24,10 +27,14 @@
 			float3 _PortalPoint;
 
 			sampler2D _MainTex;
+			sampler2D _BumpMap;
+			sampler2D _GlossMap;
+			sampler2D _MetallicMap;
 
 			struct Input 
 			{
 				float2 uv_MainTex;
+				float2 uv_BumpMap;
 				float distToPlane;
 			};
 
@@ -53,8 +60,9 @@
 				clip(-IN.distToPlane);
 				fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 				o.Albedo = c;
-				o.Metallic = _Metallic;
-				o.Smoothness = _Glossiness; 
+				o.Metallic = tex2D(_MetallicMap, IN.uv_MainTex) * _Metallic;
+				o.Smoothness = tex2D(_GlossMap, IN.uv_MainTex) * _Glossiness;
+				o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
 				o.Alpha = c.a;
 			}
 			ENDCG
@@ -71,6 +79,10 @@
 			#pragma target 3.0
 
 			sampler2D _MainTex;
+			sampler2D _BumpMap;
+			sampler2D _GlossMap;
+			sampler2D _MetallicMap;
+
 			float3 _PortalNormal;
 			float3 _PortalPoint;
 
@@ -78,6 +90,7 @@
 			struct Input 
 			{
 				float2 uv_MainTex;
+				float2 uv_BumpMap;
 				float distToPlane;
 			};
 
@@ -103,8 +116,9 @@
 				clip(IN.distToPlane);
 				fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
 				o.Albedo = c;
-				o.Metallic = _Metallic;
-				o.Smoothness = _Glossiness; 
+				o.Metallic = tex2D(_MetallicMap, IN.uv_MainTex) * _Metallic;
+				o.Smoothness = tex2D(_GlossMap, IN.uv_MainTex) * _Glossiness;
+				o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
 				o.Alpha = c.a;
 			}
 			ENDCG
